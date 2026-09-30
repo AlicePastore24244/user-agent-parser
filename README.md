@@ -29,3 +29,10 @@ The main trade-off is that unrecognized or very old User-Agents return `None` fo
 - Edge's User-Agent contains both `Edg/` and `Chrome/`; the parser matches Edge first.
 - The device type is determined by a separate ordered pattern list. Bot detection happens before mobile/tablet detection so that crawlers are not classified as mobile devices.
 - macOS version normalization: `Mac OS X 14_2` becomes `macOS` as the OS name; the version is not stored in the dataclass because the API focuses on OS family, not patch level.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
